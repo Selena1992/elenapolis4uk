@@ -1,0 +1,17 @@
+# coding=utf-8
+import unittest
+import func
+
+class TestFunc(unittest.TestCase):
+
+    def test_sum(self):
+        self.assertEqual(func.summ(10,15), 25)
+
+    def test_multi(self):
+        self.assertEqual(func.multi(10,2), 20)
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+#python -m unittest discover -v -- launch all tests in folder
