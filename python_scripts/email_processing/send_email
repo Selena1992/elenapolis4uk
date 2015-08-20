@@ -1,0 +1,14 @@
+import smtplib
+
+def send_email(email, password):
+
+    smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
+    smtpObj.ehlo()
+    smtpObj.starttls()
+    print smtpObj.login(email, password)
+    
+    print smtpObj.sendmail('elenapolis4uk@gmail.com', 'elenapolis4uk@gmail.com',
+    'Subject: Hi:)\nMessage is sent from python script')
+    smtpObj.quit()
+    
+send_email('email','password')
