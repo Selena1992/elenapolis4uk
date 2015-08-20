@@ -1,0 +1,35 @@
+import imapclient
+import pyzmail
+
+imapObj = imapclient.IMAPClient('imap.gmail.com', ssl=True)
+imapObj.login('elenapolis4uk@gmail.com', 'qzisqppgzszsifsm')
+
+imapObj.select_folder('INBOX', readonly=False)
+UIDs = imapObj.search(['SINCE 15-Aug-2014', 'UNSEEN'])
+# UIDs = imapObj.gmail_search('unsubscribe')
+print UIDs
+
+# Deleting email
+
+# imapObj.delete_messages([11105])
+# imapObj.expunge()
+# print UIDs
+
+for UID in UIDs:
+
+    # If readonly=False, fetch method will mark email as read
+    rawMessage = imapObj.fetch([UID], ['BODY[]', 'FLAGS'])
+    message = pyzmail.PyzMessage.factory(rawMessage[UID]['BODY[]'])
+
+    print message.get_subject()
+    print message.get_addresses('from')
+    print message.get_addresses('to')
+
+    # Print message body
+    if message.text_part != None:
+        print message.text_part.get_payload()
+        continue
+    else:
+        print message.html_part.get_payload()
+
+imapObj.logout()
