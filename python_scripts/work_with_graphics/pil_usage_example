@@ -1,0 +1,9 @@
+from PIL import Image
+catIm = Image.open('img.png')
+size = catIm.size
+width, height = catIm.size
+print size
+print width, height
+print catIm.filename
+croppedIm = catIm.crop((335, 345, 565, 560))
+croppedIm.save('cropped.png')
