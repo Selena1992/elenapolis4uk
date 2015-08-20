@@ -1,0 +1,32 @@
+import re
+import string
+
+def palindrome(text):
+
+    # Checking if text isn't empty, isn't NoneType, contains letters or digits
+    if text is None or text == '' or not re.findall('\w', text):
+        print "You should enter word or phrase the next time"
+
+    else:
+        # Checking if entered word or phrase is a palindrome
+        optimised_word = ''.join(letter for letter in text if re.findall('\w', letter)).lower()
+
+        if optimised_word == optimised_word[::-1] and optimised_word.__len__() != 1:
+            print '"{0}" is a palindrome'.format(text)
+
+        else:
+            # Checking if entered word or phrase is unit palindrome
+            words_in_text = text.split()
+            [words_in_text.remove(word) for word in words_in_text if word in string.punctuation]
+            lower_case_words = [word.replace(word, word.lower()) for word in words_in_text]
+            words_without_punctuation = [re.sub('\W', '', word) for word in lower_case_words]
+
+            if words_without_punctuation == words_without_punctuation[::-1] and words_in_text.__len__() != 1:
+                print '"{0}" is unit palindrome'.format(text)
+            else:
+                print '"{0}" is not a palindrome'.format(text)
+
+palindrome(",,,,4w")
+palindrome("Dammit, I'm mad!")
+palindrome('Is it?? crazy$$ how saying sentences , backwards creates backwards sentences saying how crazy it is?')
+palindrome("A man, a plan, a canal - Panama!")
