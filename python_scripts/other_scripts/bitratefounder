@@ -5,21 +5,22 @@ dir_with_files = os.listdir(os.path.dirname(os.path.abspath(__file__)))
 
 print dir
 
-fo = open("files with bitrate more than 96kb.txt", "w")
 def main():
-    for filename in dir_with_files:
-        if filename.endswith(".ogg"):
-            audio = mutagen.File(filename)
-            bitrate = audio.info.bitrate
-            channels = audio.info.channels
-            if bitrate > 96000 or channels > 1:
-                fo.write(filename + '\n')
-            print filename
-            if bitrate >= 1000:
-                kilobitrate = bitrate / 1000
-                print 'Bitrate is ' + str(kilobitrate) + ' kbit'
-            else:
-                print 'Bitrate is ' + str(bitrate) + ' bit'
-            print 'Number of channels is ' + str(channels) + '\n'
-main()
-fo.close()
+    with open("files with bitrate more than 96kb.txt", "w") as fo:
+        for filename in dir_with_files:
+            if filename.endswith(".ogg"):
+                audio = mutagen.File(filename)
+                bitrate = audio.info.bitrate
+                channels = audio.info.channels
+                if bitrate > 96000 or channels > 1:
+                    fo.write(filename + '\n')
+                print filename
+                if bitrate >= 1000:
+                    kilobitrate = bitrate / 1000
+                    print 'Bitrate is ' + str(kilobitrate) + ' kbit'
+                else:
+                    print 'Bitrate is ' + str(bitrate) + ' bit'
+                print 'Number of channels is ' + str(channels) + '\n'
+
+if __name__ == "__main__":
+    main()
