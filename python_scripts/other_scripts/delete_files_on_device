@@ -4,7 +4,7 @@ list_of_devices = [x for x in os.popen("adb devices").read().split() if re.searc
 
 for device in list_of_devices:
     list_with_dirs = os.popen("adb -s " + device + " shell ls /sdcard/Folder_with_files/").read().split()
-    print list_with_dirs
+
     if list_with_dirs != [] and '/sdcard/Folder_with_files/:' not in list_with_dirs:
         print "Deleting files"
         os.system("adb -s " + device + " shell rm -r /sdcard/Folder_with_files/")
