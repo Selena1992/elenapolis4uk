@@ -1,1 +1,27 @@
-qq
+import os, shutil, re
+from subprocess import Popen, PIPE
+
+parentdir = os.path.dirname(os.path.abspath(__file__))
+list_of_devices = [x for x in os.popen("adb devices").read().split() if re.search('[0-9]', x)]
+no_such_dir = ['No', 'such', 'file', 'or', 'directory', '/sdcard/Folder_with_screenshots/:']
+
+def delete_existed_files():
+    files = [x for x in os.listdir(parentdir) if not x.endswith(".py")]
+
+    for x in files:
+        if files != [] and os.path.isdir(x) is False:
+            os.remove(x)
+        if os.path.isdir(x):
+            shutil.rmtree(x)
+
+def pull_of_screenshots():
+    delete_existed_files()
+    for device in list_of_devices:
+        list_with_screenshots = Popen("adb -s "+ device + " shell ls /sdcard/Folder_with_screenshots/", shell=True, stdout=PIPE).stdout.read().split()
+        for word in no_such_dir:
+            if word in list_with_screenshots:
+                list_with_screenshots.pop(list_with_screenshots.index(word))
+        for x in list_with_screenshots:
+            os.system("adb -s " + device + " pull /sdcard/Folder_with_screenshots/" + x)
+pull_of_screenshots()
+
