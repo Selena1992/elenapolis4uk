@@ -1,0 +1,11 @@
+/**
+ * Created by o.polishchuk on 17.11.2014.
+ */
+public class Calculate {
+    public int substract(int a, int b){
+        return a-b;
+    }
+    public int divide(int a, int b){
+        return a/b;
+    }
+}
