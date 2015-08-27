@@ -2,7 +2,7 @@ package junit;
 
 import java.util.Arrays;
 
-public class SorDigits {
+public class SortDigits {
 
     public int sortInt(int n){
 
