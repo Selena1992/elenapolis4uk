@@ -1,0 +1,75 @@
+package simpletasks;
+
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.regex.Pattern;
+
+
+public class Grep {
+
+    String szAppName;
+
+    public Grep(){
+        szAppName = new String("Simple console app");
+    }
+
+    public static void main(String args[]){
+
+        String line = "";
+        int digit = 0;
+
+        Grep gr = new Grep();
+        System.out.println(gr.szAppName);
+        System.out.print("Enter several digits: ");
+
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            digit = sc.nextInt();
+            int len = Integer.toString(digit).length();
+            int[] iarray = new int[len];
+            int[] sorted_iarray = new int[len];
+
+            for (int index = 0; index < len; index++) {
+                iarray[index] = digit % 10;
+                digit /= 10;
+            }
+
+            Arrays.sort(iarray);
+
+            for (int index = 0; index < len; index++) {
+                sorted_iarray[index] = iarray[len-1-index];
+            }
+
+            StringBuilder builder = new StringBuilder();
+            for (int i : sorted_iarray) {
+                builder.append(i);
+            }
+            Integer sortedDigit = new Integer(builder.toString());
+            System.out.println("Sorted number: " + sortedDigit);
+        }
+        catch (Exception ex) {
+            line = sc.nextLine();
+            Pattern pattern1 = Pattern.compile("\\d");
+            Pattern pattern2 = Pattern.compile("\\W");
+            boolean isDigit = pattern1.matcher(line).find();
+            boolean isSymbol = pattern2.matcher(line).find();
+            if (isDigit | isSymbol){
+                System.out.println("You entered letters with specific symbols or digits. Enter digits or you also may enter letters and see what you get.");
+            }else {
+                System.out.println("You entered letters. Here is they, sorted by alphabet.");
+
+                line = line.replaceAll("\\W", "").replaceAll("\\d", "");
+                String[] arr = line.toLowerCase().split("(?!^)");
+
+                Arrays.sort(arr);
+
+                StringBuilder builder = new StringBuilder();
+                for (String s : arr) {
+                    builder.append(s);
+                }
+                System.out.println(builder.toString());
+            }
+        }
+        }
+}
