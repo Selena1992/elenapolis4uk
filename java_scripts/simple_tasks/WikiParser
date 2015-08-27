@@ -1,0 +1,75 @@
+package com.company.parcer;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+
+import static org.junit.Assert.assertTrue;
+
+
+public class WikiParser {
+
+    final static String siteURL = "http://mobilerndhub.sec.samsung.net/wiki/display/3DFX/SGILauncher+Test+Cases";
+    final static String pageTitle = "Log In - DPI WIKI";
+    final static String [] data = {"s.tischenko", "Adelaida01"};
+
+    public static void main (String [] args){
+
+        long startTime = System.currentTimeMillis();
+
+        HtmlUnitDriver driver = new HtmlUnitDriver();
+        java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF);
+
+        driver.get(siteURL);
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        boolean checkTitle = driver.getTitle().contentEquals(pageTitle);
+        assertTrue(checkTitle);
+
+        System.out.println("Start log in");
+
+        driver.findElement(By.id("os_username")).sendKeys(data[0]);
+        driver.findElement(By.id("os_password")).sendKeys(data[1]);
+        driver.findElement(By.id("loginButton")).click();
+
+        int pass = 0;
+        int fail = 0;
+
+        System.out.println("Getting number of pass and fail");
+
+        WebElement table = driver.findElement(By.className("confluenceTable"));
+        List<WebElement>  rows = table.findElements(By.tagName("tr"));
+
+        for (WebElement row : rows){
+            List<WebElement> cells = row.findElements(By.tagName("td"));
+            for (WebElement cell : cells){
+
+                if (cell.getText().startsWith("Pass") || cell.getText().startsWith(" Pass")){
+                    pass+=1;
+                    break;
+                } else if (cell.getText().startsWith("Fail") || cell.getText().startsWith(" Fail")) {
+                    fail+=1;
+                    break;
+                } else continue;
+                }
+        }
+
+        float sum = pass+fail;
+        float pass_percent = Math.round(pass*100)/sum;
+        float fail_percent = Math.round(fail*100)/sum;
+
+        System.out.println("pass = " + pass);
+        System.out.println("fail = " + fail);
+        System.out.println("pass percent = " + pass_percent + " %");
+        System.out.println("fail percent = " + fail_percent + " %");
+
+        driver.close();
+
+        long time = System.currentTimeMillis() - startTime;
+        System.out.println("Passed " + TimeUnit.MILLISECONDS.toSeconds(time) + " sec");
+    }
+}
