@@ -1,0 +1,26 @@
+import org.junit.*;
+import static org.junit.Assert.*;
+/**
+ * Created by o.polishchuk on 17.11.2014.
+ */
+
+public class Test1 {
+    Calculate calculate;
+
+        @Before()
+        public void preconditions () {
+            calculate = new Calculate();
+        }
+
+        @Test()
+        public void testSubstract () {
+            int n = calculate.substract(10, 5);
+            assertEquals("Wrong result", n, 5);
+        }
+
+        @Test()
+        public void testDivide () {
+            int n = calculate.divide(10, 5);
+            assertEquals("Wrong result", n, 2);
+        }
+    }
