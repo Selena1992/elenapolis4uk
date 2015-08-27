@@ -1,0 +1,40 @@
+package simpletasks;
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+/**
+ * Created by o.polishchuk on 19.06.2015.
+ */
+public class ArrayReverse {
+
+    public int[] a;
+
+    public MyTest(int number_of_digits){
+        a = new int[number_of_digits];
+    }
+
+    public static void main (String args[]){
+
+        MyTest ex = new MyTest(6);
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter 6 digits in array");
+
+        for (int i=0; i<ex.a.length; i++){
+            ex.a[i] = in.nextInt();
+        }
+
+        System.out.println(Arrays.toString(ex.a));
+        ex.arrayRevert();
+    }
+
+    public void arrayRevert(){
+
+        for (int i=0; i<a.length/2; i++) {
+            int temp = a[i];
+            a[i] = a[a.length-1 - i];
+            a[a.length-1 -i] = temp;
+            }
+            System.out.println(Arrays.toString(a));
+    }
+}
