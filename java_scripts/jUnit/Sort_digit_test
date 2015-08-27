@@ -1,0 +1,63 @@
+package junit;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
+/**
+ * Created by o.polishchuk on 25.06.2015.
+ */
+public class SortDigitsTest {
+
+    SorDigits sorDigits;
+
+    @Before
+    public void preconditions(){
+        sorDigits = new SorDigits();
+    }
+
+    @Test
+    public void testsortInt1() {
+        int n = 243546;
+        assertEquals(654432, sorDigits.sortInt(n));
+    }
+
+    @Test
+    public void testsortInt2() {
+        int n = -1;
+        assertEquals(-1, sorDigits.sortInt(n));
+    }
+
+    @Test
+    public void testsortInt3() {
+        int n = 243546;
+        int len = Integer.toString(n).length();
+
+        assertEquals(len, Integer.toString(sorDigits.sortInt(n)).length());
+    }
+
+    @Test
+    public void testsortInt4() {
+        int n = 001;
+        assertEquals(100, sorDigits.sortInt(n));
+    }
+
+    @Test
+    public void testsortInt5() {
+        int n = 0x7FFF;
+        assertEquals(77632, sorDigits.sortInt(n));
+    }
+
+    @Test
+    public void testsortInt6() {
+        int n = 077777;
+        assertEquals(77632, sorDigits.sortInt(n));
+    }
+
+    @Test
+    public void testsortInt7() {
+        int n = ~10;
+        assertEquals(11, sorDigits.sortInt(n));
+    }
+}
