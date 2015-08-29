@@ -1,0 +1,14 @@
+import time
+from uiautomator import device as d
+import os
+
+os.popen('adb shell am start -n app_package_name/.MainActivity')
+
+for step in range(30):
+  d.drag(667, 209, 1062, 217)
+  d.drag(1062, 217, 667, 209)
+  time.sleep(1)
+  
+d.click(1119, 2329)
+
+os.popen(adb shell am force-stop app_package_name)
