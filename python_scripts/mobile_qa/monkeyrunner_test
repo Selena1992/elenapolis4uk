@@ -1,0 +1,56 @@
+# coding: utf-8
+# Imports the monkeyrunner modules used by this program
+from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice
+import os
+import time
+
+def log(filename, device):
+    #output of log on the screen
+    msg = device.shell('logcat -d')
+    f_log = open(filename, 'a')
+    if msg is None:
+        msg = 'None'
+    f_log.write(msg.encode('utf-8'))
+    f_log.close()
+    device.shell('logcat -c')
+    a=open(filename,'r').read()
+    b='fatal'
+    if b in a:
+        print "Fail"
+        sys.exit(0)
+
+print "Connect device"
+device = MonkeyRunner.waitForConnection(5)
+
+# sets a variable with the package's internal name
+package = 'package.name'
+
+# sets a variable with the name of an Activity in the package
+activity = '.SampleActivity'
+
+# sets the name of the component to start
+runComponent = package + '/' + activity
+
+print "Start application"
+device.startActivity(component=runComponent)
+
+time.sleep(5)
+
+print "Pressing buttons"
+
+def coordinats(coord):
+    for i in range(100):
+        for key in coord:
+            device.touch(coord[key][0], coord[key][1], MonkeyDevice.DOWN_AND_UP)
+            time.sleep(0.01)
+coord = {'a':[310, 2336],'b':[712, 2336],'c':[1117, 2336]}
+
+coordinats(coord)
+log('path_t_file\\log.txt', device)
+
+time.sleep(2)
+
+print "Close application"
+device.shell("am force-stop " + package)
+
+print "Pass"
