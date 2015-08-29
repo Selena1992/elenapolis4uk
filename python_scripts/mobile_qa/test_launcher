@@ -1,0 +1,15 @@
+import os
+
+parentdir = os.path.dirname(os.path.realpath(__file__))
+testcases = [parentdir + os.sep + "tc" + os.sep + x for x in os.listdir(parentdir + os.sep + "tc") if x.endswith(".py")]
+
+for testcase in testcases:
+    print testcase
+    tc = testcase.split(os.sep)
+    print "Current TC is " + tc[-1] + " (" + str(testcases.index(testcase) + 1) + " from " + str(len(testcases)) + ")"
+    
+    #for monkeyrunner tests
+    os.system("monkeyrunner " + testcase)
+    
+    #or for uiautomator tests
+    os.system("python " + testcase)    
