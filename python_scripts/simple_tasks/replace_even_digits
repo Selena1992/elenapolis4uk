@@ -1,0 +1,18 @@
+import random
+
+matr = []
+
+def matrix():
+    for i in range(4):
+        matr.append([random.randrange(1, 100), random.randint(1, 100), random.randint(1, 100), random.randint(1, 100)])
+    print matr
+
+def change_even_digits(matr):
+    for index1, row in enumerate(matr):
+        for index2, element in enumerate(row):
+            if element % 2 == 0:
+                matr[index1][index2] = 0
+    print matr
+
+matrix()
+change_even_digits(matr)
