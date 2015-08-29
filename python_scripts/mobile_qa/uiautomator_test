@@ -2,8 +2,25 @@ import time
 from uiautomator import device as d
 import os
 
+def log(filename, device):
+    #output of log on the screen
+    msg = device.shell('logcat -d')
+    f_log = open(filename, 'a')
+    if msg is None:
+        msg = 'None'
+    f_log.write(msg.encode('utf-8'))
+    f_log.close()
+    device.shell('logcat -c')
+    a=open(filename,'r').read()
+    b='fatal'
+    if b in a:
+        print "Fail"
+        sys.exit(0)
+        
+print "Start application"
 os.popen('adb shell am start -n app_package_name/.MainActivity')
 
+print "Performing scrolling of pages"
 for step in range(30):
   d.drag(667, 209, 1062, 217)
   d.drag(1062, 217, 667, 209)
@@ -11,4 +28,9 @@ for step in range(30):
   
 d.click(1119, 2329)
 
+print "Close application"
 os.popen(adb shell am force-stop app_package_name)
+
+print "Pass"
+
+
