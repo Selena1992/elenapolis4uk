@@ -23,7 +23,7 @@ print "Connect device"
 device = MonkeyRunner.waitForConnection(5)
 
 # sets a variable with the package's internal name
-package = 'package.name'
+package = 'app_package_name'
 
 # sets a variable with the name of an Activity in the package
 activity = '.SampleActivity'
