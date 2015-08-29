@@ -1,0 +1,75 @@
+import re
+import collections
+import os
+import time
+import sys
+
+sys.path.append('C:\Python27\mylibs\AndroidViewClient-master\src')
+from com.dtmilano.android.viewclient import ViewClient, View
+time.clock()
+vc = ViewClient(*ViewClient.connectToDeviceOrExit())
+
+button_bounds = collections.OrderedDict()
+centered_coordinates = []
+view_id = []
+sdk_ver = vc.getSdkVersion()
+
+def get_buttons_names():
+    dump_screen = os.popen(r'python C:\Python27\mylibs\AndroidViewClient-master\tools\dump').readlines()
+    temp_buttons_names = []
+    for line in dump_screen:
+        try:
+            tepm_view_id = re.findall('android.widget.ListView.*', line)[0].rstrip().split('ListView')[-1].lstrip()
+            view_id.append(tepm_view_id)
+        except:
+            pass
+        try:
+            button = re.findall('widget.Button.*', line)[0].rstrip().split('Button')[-1].lstrip()
+            try:
+                temp_buttons_id = re.findall('id/.*\d{1,3}', button)[0]
+                button = button.replace(temp_buttons_id,'').lstrip()
+            except:
+                pass
+            if button not in button_bounds.keys():
+                temp_buttons_names.append(button)
+        except:
+            pass
+    for t in temp_buttons_names:
+        vc.findViewWithTextOrRaise(t)
+        st = str(vc.findViewWithTextOrRaise(t))
+        bounds = re.findall(r'bounds=(.*?) content-desc', st)
+        coordinates = [int(i) for i in re.findall("\d{1,4}", bounds[0])]
+        centered_x = (coordinates[0] + coordinates[2])/2
+        centered_y = (coordinates[1] + coordinates[3])/2
+        centered_coordinates = [centered_x, centered_y]
+        button_bounds[t] = centered_coordinates
+    if len(temp_buttons_names) <= 3:
+        return False
+    else:
+        return True
+
+def scroll_listview():
+    if sdk_ver >= 19:
+        listview = vc.findViewByIdOrRaise(view_id[0])
+        if listview.isScrollable():
+            first_element_x = button_bounds.values()[0][0]
+            last_element_x = button_bounds.values()[-1][0]
+            first_element_y = button_bounds.values()[0][1]
+            last_element_y = button_bounds.values()[-1][1]
+            os.popen('adb shell input swipe' + " "+ str(last_element_x) + " "+ str(last_element_y)+" "+ str(first_element_x) +
+                         " "+ str(first_element_y) + " " + str(800))
+    else:
+        listview = vc.findViewWithAttribute('class', 'android.widget.ListView')
+        if listview.isScrollable():
+            first_element_x = button_bounds.values()[0][0]
+            last_element_x = button_bounds.values()[-1][0]
+            first_element_y = button_bounds.values()[0][1]
+            last_element_y = button_bounds.values()[-1][1]
+            os.popen('adb shell input swipe' + " "+ str(last_element_x) + " "+ str(last_element_y)+" "+ str(first_element_x) +" "+ str(first_element_y))
+
+    vc.dump()
+
+while get_buttons_names():
+    scroll_listview()
+
+print button_bounds
