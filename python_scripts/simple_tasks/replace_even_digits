@@ -7,7 +7,7 @@ def matrix():
         matr.append([random.randrange(1, 100), random.randint(1, 100), random.randint(1, 100), random.randint(1, 100)])
     print matr
 
-def change_even_digits(matr):
+def replace_even_digits(matr):
     for index1, row in enumerate(matr):
         for index2, element in enumerate(row):
             if element % 2 == 0:
@@ -15,4 +15,4 @@ def change_even_digits(matr):
     print matr
 
 matrix()
-change_even_digits(matr)
+replace_even_digits(matr)
