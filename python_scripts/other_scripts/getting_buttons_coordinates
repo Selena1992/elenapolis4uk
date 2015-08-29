@@ -1,0 +1,73 @@
+import re
+import collections
+import os
+import time
+
+from com.dtmilano.android.viewclient import ViewClient, ViewNotFoundException
+time.clock()
+vc = ViewClient(*ViewClient.connectToDeviceOrExit())
+
+button_names = ['Button_name_1', 'Button_name_2', 'Button_name_3', 'Button_name_4', 'Button_name_5', 'Button_name_6',
+                'Button_name_6', 'Button_name_7', 'Button_name_8', 'Button_name_9', 'Button_name_10', 'Button_name_11', 'Button_name_12,
+                'Button_name_13','Button_name_14','Button_name_15']
+
+button_bounds = collections.OrderedDict()
+centered_coordinates = []
+
+for t in button_names:
+    try:
+        vc.findViewWithTextOrRaise(t)
+        st = str(vc.findViewWithTextOrRaise(t))
+        bounds = re.findall(r'bounds=(.*?) content-desc', st)
+        coordinates = [int(i) for i in re.findall("\d{1,4}", bounds[0])]
+        centered_x = (coordinates[0] + coordinates[2])/2
+        centered_y = (coordinates[1] + coordinates[3])/2
+        centered_coordinates = [centered_x, centered_y]
+        button_bounds[t] = centered_coordinates
+        
+    except ViewNotFoundException:
+        if '19' in os.popen('adb shell getprop ro.build.version.sdk').read():
+            listview = vc.findViewByIdOrRaise("app_package_name:id/buttonsPanel")
+
+            if listview.isScrollable() and t not in button_bounds.keys():
+                first_element_x = button_bounds.values()[0][0]
+                last_element_x = button_bounds.values()[-1][0]
+                first_element_y = button_bounds.values()[0][1]
+                last_element_y = button_bounds.values()[-1][1]
+
+                os.popen('adb shell input swipe' + " "+ str(last_element_x) + " "+ str(last_element_y)+" "+ str(first_element_x) +
+                             " "+ str(first_element_y) + " " + str(800))
+
+                vc.dump()
+                st = str(vc.findViewWithTextOrRaise(t))
+                bounds = re.findall(r'bounds=(.*?) content-desc', st)
+                coordinates = [int(i) for i in re.findall("\d{1,4}", bounds[0])]
+                centered_x = (coordinates[0] + coordinates[2])/2
+                centered_y = (coordinates[1] + coordinates[3])/2
+                centered_coordinates = [centered_x, centered_y]
+                button_bounds[t] = centered_coordinates
+            else:
+                print "Couldn't find button with text = ", t
+
+        else:
+            listview = vc.findViewWithAttribute('class', 'android.widget.ListView')
+            if listview.isScrollable() and t not in button_bounds.keys():
+                first_element_x = button_bounds.values()[0][0]
+                last_element_x = button_bounds.values()[-1][0]
+                first_element_y = button_bounds.values()[0][1]
+                last_element_y = button_bounds.values()[-1][1]
+
+                os.popen('adb shell input swipe' + " "+ str(last_element_x) + " "+ str(last_element_y)+" "+ str(first_element_x) +" "+ str(first_element_y))
+                vc.dump()
+                st = str(vc.findViewWithTextOrRaise(t))
+                bounds = re.findall(r'bounds=(.*?) content-desc', st)
+                coordinates = [int(i) for i in re.findall("\d{1,4}", bounds[0])]
+                centered_x = (coordinates[0] + coordinates[2])/2
+                centered_y = (coordinates[1] + coordinates[3])/2
+                centered_coordinates = [centered_x, centered_y]
+                button_bounds[t] = centered_coordinates
+            else:
+                print "Couldn't find button with text = ", t
+
+print button_bounds
+print time.clock()
