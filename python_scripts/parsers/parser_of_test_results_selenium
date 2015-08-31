@@ -1,0 +1,68 @@
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+request_page = "your_url"
+data = {"id": "name", "password": "pass"}
+start = time.clock()
+
+def initialize_driver():
+    global browser
+    browser = webdriver.Firefox()
+    browser.implicitly_wait(10)
+    browser.maximize_window()
+
+def tear_down():
+    browser.close()
+
+def get_page(page):
+    browser.get(page)
+    print "Check page "+ browser.title
+    if browser.title == "Your_title":
+        log_in()
+
+def log_in():
+    print "Start log in"
+    browser.find_element_by_id('os_username').send_keys(data["id"])
+    browser.find_element_by_id('os_password').send_keys(data["password"])
+    browser.find_element_by_id('loginButton').click()
+
+def get_results():
+
+    pass_res = 0
+    fail_res = 0
+
+    print "Getting number of pass and fail"
+
+    table = browser.find_element(By.CLASS_NAME, "your_class_name")
+    rows = table.find_elements(By.TAG_NAME, "tr")
+
+    for row in rows:
+        cells = row.find_elements(By.TAG_NAME, "td")
+        for cell in cells:
+            if "Pass" in cell.text:
+                pass_res += 1
+                break
+            if "Fail" in cell.text:
+                fail_res += 1
+                break
+            else:
+                continue
+
+    sum = pass_res+fail_res
+    pass_percent = round(float(pass_res*100)/sum, 2)
+    fail_percent = round(float(fail_res*100)/sum, 2)
+
+    print "pass = " + str(pass_res)
+    print "fail = " + str(fail_res)
+
+    print "pass percent = " + str(pass_percent) + " %"
+    print "fail percent = " + str(fail_percent) + " %"
+
+initialize_driver()
+get_page(request_page)
+get_results()
+tear_down()
+
+elapsed = (time.clock() - start)
+print str(round(elapsed,2)) + " sec"
