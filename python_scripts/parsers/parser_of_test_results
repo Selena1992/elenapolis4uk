@@ -1,0 +1,64 @@
+import urllib2
+import urllib
+import cookielib
+from bs4 import BeautifulSoup
+import time
+
+start = time.clock()
+
+def log_in():
+    cj = cookielib.CookieJar()
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+
+    urllib2.install_opener(opener)
+    authentication_url = 'your_url'
+
+    payload = {
+      'os_username': 'username',
+      'os_password': 'password'
+      }
+
+    data = urllib.urlencode(payload)
+
+    req = urllib2.Request(authentication_url, data)
+
+    urllib2.urlopen(req)
+    resp2 = urllib2.urlopen("your_url")
+    contents = resp2.read()
+    return contents
+
+def parse(contents):
+    soup = BeautifulSoup(contents, 'html.parser')
+
+    pass_res = 0
+    fail_res = 0
+
+    table = soup.find('table', class_='your_class')
+    rows = table.find_all('tr')
+    for row in rows:
+        cells = row.find_all('td')
+        for cell in cells:
+            if "Pass" in cell.text:
+                pass_res+=1
+                break
+            if "Fail" in cell.text:
+                fail_res+=1
+                break
+            else:
+                continue
+
+    sum = pass_res+fail_res
+    pass_percent = round(float(pass_res*100)/sum, 2)
+    fail_percent = round(float(fail_res*100)/sum, 2)
+
+    print "pass = " + str(pass_res)
+    print "fail = " + str(fail_res)
+
+    print "pass percent = " + str(pass_percent) + " %"
+    print "fail percent = " + str(fail_percent) + " %"
+
+log_in()
+parse(log_in())
+
+elapsed = (time.clock() - start)
+print str(round(elapsed,2)) + " sec"
