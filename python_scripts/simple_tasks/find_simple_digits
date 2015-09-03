@@ -22,3 +22,5 @@ def get_a_simple_digits(a, b):
             new_list.append(x)
 
     print new_list
+    
+get_a_simple_digits(10,10000)
