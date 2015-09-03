@@ -1,5 +1,4 @@
 import sys
-import time
 
 def get_a_simple_digits(a, b):
 
@@ -23,7 +22,3 @@ def get_a_simple_digits(a, b):
             new_list.append(x)
 
     print new_list
-
-my_time = time.clock()
-get_a_simple_digits(10,10000)
-print time.clock() - my_time
