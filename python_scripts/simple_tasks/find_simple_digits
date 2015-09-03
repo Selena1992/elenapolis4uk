@@ -1,0 +1,29 @@
+import sys
+import time
+
+def get_a_simple_digits(a, b):
+
+    flag = 0
+
+    if a <= 1 or a >= b:
+        print "Please, enter positive digits. First digit shouldn't be bigger the second one"
+        sys.exit(0)
+    else:
+        my_list = [x for x in range(a, b)]
+        new_list = []
+
+    for x in my_list:
+        for y in range(2, x):
+            if x%y == 0:
+                flag = 1
+                break
+            else:
+                flag = 0
+        if flag==0:
+            new_list.append(x)
+
+    print new_list
+
+my_time = time.clock()
+get_a_simple_digits(10,10000)
+print time.clock() - my_time
