@@ -1,0 +1,28 @@
+import os, sys, subprocess, time
+
+parentdir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(parentdir)
+import additional
+
+testcase_name = os.path.splitext(os.path.basename(__file__))[0]
+
+print "Start of Stress test - 'All apps - Home screen transition for 20 times'"
+
+#Transition between All apps - Home screen
+for i in range(10):
+    subprocess.Popen('adb shell input tap 1275 2275', shell=True)
+    time.sleep(1)
+    subprocess.Popen('adb shell input keyevent 4', shell=True)
+    time.sleep(0.8)
+
+additional.log(testcase_name)
+
+for j in range(10):
+    subprocess.Popen('adb shell input tap 1275 2275', shell=True)
+    time.sleep(1)
+    subprocess.Popen('adb shell input keyevent 3', shell=True)
+    time.sleep(0.8)
+
+additional.log(testcase_name)
+additional.create_html_report(testcase_name, 'True')
+print "Test is passed"
