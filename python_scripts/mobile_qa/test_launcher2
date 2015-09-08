@@ -1,0 +1,27 @@
+import os, time
+import additional
+
+parentdir = os.path.dirname(os.path.realpath(__file__))
+testcases = [parentdir + os.sep + "tests" + os.sep + x for x in os.listdir(parentdir + os.sep + "tests") if
+             x.endswith(".py")]
+
+for file in os.listdir(parentdir + os.sep + "reports"):
+    os.remove(parentdir + os.sep + "reports" + os.sep + file)
+
+time.clock()
+print "Stress tests"
+
+additional.create_html_report_header()
+
+for testcase in testcases:
+    tc = testcase.split(os.sep)
+    print "Current TC is " + tc[-1] + " (" + str(testcases.index(testcase) + 1) + " from " + str(len(testcases)) + ")"
+
+    os.popen('adb shell pm clear package')
+    os.popen('adb logcat -c')
+
+    additional.check_activity()
+
+    os.system("python " + testcase)
+
+print str(round(time.clock())) + " sec"
