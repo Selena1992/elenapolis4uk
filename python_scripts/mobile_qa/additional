@@ -1,0 +1,58 @@
+import time, os, sys
+import HTML
+
+current_activity = os.popen('adb shell dumpsys activity recents | find "Recent #0"').read()
+activity = 'activity'
+
+parentdir = os.path.dirname(os.path.realpath(__file__))
+report_path = parentdir + os.sep + "reports" + os.sep + time.strftime("%d_%m_%Y")
+
+def log(filename):
+    logtext = os.popen('adb logcat -d').read()
+    error = 'FATAL EXCEPTION'
+    app_frozen = 'MainView dispatchTouchEvent DOWN state = Navigation'
+    if (error in logtext or app_frozen in logtext) or (activity not in current_activity):
+        f_log = open(report_path +"_Log_for_" + filename + ".txt", 'a')
+        [f_log.write(str(line)) for line in os.popen('adb logcat -d').readlines()]
+        f_log.close()
+        print "Test is failed"
+        create_html_report(filename, "Fail")
+        sys.exit(0)
+
+def check_activity():
+    if activity not in current_activity:
+        os.popen('adb shell am start -n package/.activity')
+        time.sleep(5)
+
+    #Pressing HOME button
+    os.popen('adb shell input keyevent 3')
+    time.sleep(5)
+
+def create_html_report_header():
+    file = open(report_path + "_Test_report.html", 'a')
+
+    table_data = [
+        ['Name of test case',   'Result'], ]
+    [file.write(line) for line in HTML.table(table_data)]
+    file.close()
+
+
+def create_html_report(testcase, result):
+    file = open(report_path + "_Test_report.html", 'a')
+
+    result_colors = {
+            'True':      'Green',
+            'Fail':      'Red',
+        }
+
+    color = result_colors[result]
+
+    colored_testcase = HTML.TableCell(testcase, bgcolor=color)
+    colored_result = HTML.TableCell(result, bgcolor=color)
+
+    table = HTML.Table()
+
+    table.rows.append([colored_testcase, colored_result])
+
+    [file.write(line) for line in str(table)]
+    file.close()
