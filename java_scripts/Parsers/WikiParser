@@ -13,9 +13,9 @@ import static org.junit.Assert.assertTrue;
 
 public class WikiParser {
 
-    final static String siteURL = "http://mobilerndhub.sec.samsung.net/wiki/display/3DFX/SGILauncher+Test+Cases";
+    final static String siteURL = "url";
     final static String pageTitle = "Log In - DPI WIKI";
-    final static String [] data = {"s.tischenko", "Adelaida01"};
+    final static String [] data = {"is", "pass"};
 
     public static void main (String [] args){
 
