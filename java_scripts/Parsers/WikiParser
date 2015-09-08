@@ -41,7 +41,7 @@ public class WikiParser {
 
         System.out.println("Getting number of pass and fail");
 
-        WebElement table = driver.findElement(By.className("confluenceTable"));
+        WebElement table = driver.findElement(By.className("className"));
         List<WebElement>  rows = table.findElements(By.tagName("tr"));
 
         for (WebElement row : rows){
