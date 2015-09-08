@@ -1,0 +1,8 @@
+import os
+
+add = "_original.png"
+path_2_folders = os.listdir(os.path.dirname(os.path.abspath(__file__)))
+for x in path_2_folders:
+    if x.endswith('.png'):
+        new_x = add.join(x.rsplit('.png'))
+        os.rename(x, new_x)
