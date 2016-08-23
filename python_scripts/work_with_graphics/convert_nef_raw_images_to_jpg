@@ -1,0 +1,14 @@
+#This script converts raw images to .jpg format. 
+#Put this script it a folder with raw .nef files, run it and it will create .jpg files in the same folder. 
+
+import rawpy
+import os
+import imageio
+
+list_with_files = os.listdir(os.path.dirname(os.path.abspath(__name__)))
+
+for file in list_with_files:
+    if file.endswith('.NEF'):
+        with rawpy.imread(file) as raw:
+            rgb = raw.postprocess()
+            imageio.imsave(file.split('.NEF')[0]+'.JPG', rgb)
